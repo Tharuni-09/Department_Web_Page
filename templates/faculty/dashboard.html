@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Faculty Dashboard{% endblock %}
+{% block page_title %}Faculty Dashboard{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="bi bi-journal-text"></i></div><div class="stat-info"><div class="stat-number">{{ data.my_notes }}</div><div class="stat-label">My Notes</div></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="bi bi-file-earmark-text"></i></div><div class="stat-info"><div class="stat-number">{{ data.my_papers }}</div><div class="stat-label">My Papers</div></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="bi bi-person-badge-fill"></i></div><div class="stat-info"><div class="stat-number">{{ data.students }}</div><div class="stat-label">Students</div></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="bi bi-file-person-fill"></i></div><div class="stat-info"><div class="stat-number">{{ data.resumes }}</div><div class="stat-label">Resumes</div></div></div>
+</div>
+<div class="cards-grid">
+    <div class="card"><div class="card-header"><h4>⚡ Quick Actions</h4></div><div class="card-body"><div class="btn-group" style="flex-wrap:wrap">
+        <a href="/faculty/notes/upload" class="btn btn-primary btn-sm"><i class="bi bi-upload"></i> Upload Notes</a>
+        <a href="/faculty/papers/upload" class="btn btn-success btn-sm"><i class="bi bi-upload"></i> Upload Paper</a>
+        <a href="/faculty/resumes" class="btn btn-outline btn-sm"><i class="bi bi-file-person"></i> View Resumes</a>
+        <a href="/chatbot" class="btn btn-outline btn-sm"><i class="bi bi-robot"></i> AI Chat</a>
+    </div></div></div>
+    <div class="card"><div class="card-header"><h4>📒 Recent Notes</h4></div><div class="card-body">
+        {% if recent_notes %}{% for n in recent_notes %}<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color)"><div><strong style="font-size:13px">{{ n.title }}</strong><br><small class="text-muted">{{ n.subject }}</small></div><span class="badge {% if n.status=='approved' %}badge-success{% elif n.status=='pending' %}badge-warning{% else %}badge-danger{% endif %}">{{ n.status|capitalize }}</span></div>{% endfor %}
+        {% else %}<p class="text-muted" style="font-size:13px">No notes uploaded yet</p>{% endif %}
+    </div></div>
+</div>
+{% endblock %}

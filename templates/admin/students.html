@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Student Management{% endblock %}
+{% block page_title %}Student Management{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h3>🎓 Students</h3>
+    <a href="/admin/students/add" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Student</a>
+</div>
+<div class="card"><div class="card-body">
+{% if students %}
+<div class="table-responsive"><table class="data-table"><thead><tr><th>Name</th><th>Roll No</th><th>Email</th><th>Semester</th><th>Batch</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for s in students %}
+<tr><td><strong>{{ s.full_name }}</strong></td><td>{{ s.roll_no or '—' }}</td><td>{{ s.email }}</td><td>{{ s.semester or '—' }}</td><td>{{ s.batch_year or '—' }}</td>
+<td><span class="badge {% if s.status=='Active' %}badge-success{% else %}badge-danger{% endif %}">{{ s.status }}</span></td>
+<td><div class="btn-group"><a href="/admin/students/edit/{{ s.id }}" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a><a href="javascript:void(0)" onclick="confirmDelete('/admin/students/delete/{{ s.id }}','{{ s.full_name }}')" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a></div></td></tr>
+{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-state"><i class="bi bi-person-badge"></i><h4>No Students</h4><p>Add students to get started.</p></div>{% endif %}
+</div></div>
+{% endblock %}

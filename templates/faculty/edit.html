@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Edit Faculty</h2>
+
+<form method="POST">
+
+<input name="name" value="{{ faculty.name }}">
+<input name="email" value="{{ faculty.email }}">
+<input name="department" value="{{ faculty.department }}">
+
+<button type="submit">Update</button>
+
+</form>
+
+{% endblock %}

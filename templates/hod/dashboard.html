@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}HOD Dashboard{% endblock %}
+{% block page_title %}HOD Dashboard{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="bi bi-people-fill"></i></div><div class="stat-info"><div class="stat-number">{{ data.faculty }}</div><div class="stat-label">Faculty</div></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="bi bi-person-badge-fill"></i></div><div class="stat-info"><div class="stat-number">{{ data.students }}</div><div class="stat-label">Students</div></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="bi bi-clock-history"></i></div><div class="stat-info"><div class="stat-number">{{ data.pending_notes }}</div><div class="stat-label">Pending Notes</div></div></div>
+    <div class="stat-card"><div class="stat-icon red"><i class="bi bi-hourglass-split"></i></div><div class="stat-info"><div class="stat-number">{{ data.pending_papers }}</div><div class="stat-label">Pending Papers</div></div></div>
+</div>
+<div class="cards-grid">
+    <div class="card"><div class="card-header"><h4>⚡ Quick Actions</h4></div><div class="card-body"><div class="btn-group" style="flex-wrap:wrap">
+        <a href="/hod/notes?status=pending" class="btn btn-warning btn-sm"><i class="bi bi-check2-all"></i> Review Notes ({{ data.pending_notes }})</a>
+        <a href="/hod/papers?status=pending" class="btn btn-warning btn-sm"><i class="bi bi-check2-all"></i> Review Papers ({{ data.pending_papers }})</a>
+        <a href="/hod/resumes" class="btn btn-primary btn-sm"><i class="bi bi-file-person"></i> View Resumes</a>
+        <a href="/hod/students" class="btn btn-outline btn-sm"><i class="bi bi-people"></i> Student Reports</a>
+    </div></div></div>
+</div>
+{% endblock %}

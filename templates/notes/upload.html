@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Upload Notes{% endblock %}
+{% block page_title %}Upload Notes{% endblock %}
+{% block content %}
+<div class="form-card" style="max-width:600px">
+    <h3>📤 Upload Notes</h3>
+    <form method="POST" action="/notes/upload" enctype="multipart/form-data">
+        <div class="form-group"><label>Title *</label><input type="text" name="title" class="form-control" required></div>
+        <div class="form-group"><label>Description</label><textarea name="description" class="form-control" rows="3"></textarea></div>
+        <div class="form-row">
+            <div class="form-group"><label>Subject *</label><select name="subject" class="form-control" required>{% for s in subjects %}<option>{{ s }}</option>{% endfor %}</select></div>
+            <div class="form-group"><label>Semester *</label><select name="semester" class="form-control" required>{% for s in semesters %}<option value="{{ s }}">Sem {{ s }}</option>{% endfor %}</select></div>
+        </div>
+        <div class="form-group"><label>Regulation</label><select name="regulation" class="form-control"><option value="">Select</option>{% for r in regulations %}<option>{{ r }}</option>{% endfor %}</select></div>
+        <div class="form-group"><label>File *</label><div class="file-input-wrapper"><input type="file" name="file" accept=".pdf,.docx,.doc" required><i class="bi bi-cloud-arrow-up"></i><span>PDF or DOCX</span></div></div>
+        <button type="submit" class="btn btn-primary mt-2"><i class="bi bi-upload"></i> Upload</button>
+    </form>
+</div>
+{% endblock %}

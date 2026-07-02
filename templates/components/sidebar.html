@@ -1,0 +1,31 @@
+<div class="sidebar" id="sidebar">
+
+    <div class="logo">
+        <img src="{{ url_for('static', filename='images/logo.png') }}">
+        <h3>Loyola ERP</h3>
+    </div>
+
+    <ul>
+
+        {% if session.role == 'admin' %}
+        <li><a href="/admin/dashboard">Dashboard</a></li>
+        <li><a href="/admin/faculty">Faculty</a></li>
+        <li><a href="/admin/student">Students</a></li>
+        <li><a href="/admin/settings">Settings</a></li>
+        {% endif %}
+
+        {% if session.role == 'faculty' %}
+        <li><a href="/faculty/dashboard">Dashboard</a></li>
+        <li><a href="/faculty/notes">Notes</a></li>
+        <li><a href="/faculty/papers">Papers</a></li>
+        <li><a href="/chatbot">AI Chat</a></li>
+        {% endif %}
+
+        {% if session.role == 'student' %}
+        <li><a href="/student/dashboard">Dashboard</a></li>
+        <li><a href="/notes">Notes</a></li>
+        <li><a href="/papers">Papers</a></li>
+        {% endif %}
+
+    </ul>
+</div>

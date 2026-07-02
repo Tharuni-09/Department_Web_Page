@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Notes{% endblock %}
+{% block page_title %}Study Notes{% endblock %}
+{% block content %}
+<div class="filter-bar">
+    <select class="form-control" style="width:auto" onchange="window.location='?subject='+this.value+'&semester={{ request.args.get('semester','') }}'">
+        <option value="">All Subjects</option>
+        {% for s in subjects %}<option value="{{ s }}" {{ 'selected' if request.args.get('subject')==s }}>{{ s }}</option>{% endfor %}
+    </select>
+    <select class="form-control" style="width:auto" onchange="window.location='?semester='+this.value+'&subject={{ request.args.get('subject','') }}'">
+        <option value="">All Semesters</option>
+        {% for s in semesters %}<option value="{{ s }}" {{ 'selected' if request.args.get('semester')==s|string }}>Sem {{ s }}</option>{% endfor %}
+    </select>
+</div>
+<div class="card"><div class="card-body">
+{% if notes %}
+<div class="table-responsive"><table class="data-table"><thead><tr><th>Title</th><th>Subject</th><th>Sem</th><th>Description</th><th>Download</th></tr></thead><tbody>
+{% for n in notes %}<tr><td><strong>{{ n.title }}</strong></td><td>{{ n.subject }}</td><td>{{ n.semester }}</td><td style="font-size:12px;color:var(--text-muted)">{{ (n.description or '')[:50] }}</td><td><a href="/notes/download/{{ n.filename }}" class="btn btn-primary btn-sm"><i class="bi bi-download"></i></a></td></tr>{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-state"><i class="bi bi-journal"></i><h4>No Notes Found</h4></div>{% endif %}
+</div></div>
+{% endblock %}

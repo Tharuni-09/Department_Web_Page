@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+{% block page_title %}Student Dashboard{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="bi bi-journal-text"></i></div><div class="stat-info"><div class="stat-number">{{ data.notes }}</div><div class="stat-label">Available Notes</div></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="bi bi-file-earmark-text"></i></div><div class="stat-info"><div class="stat-number">{{ data.papers }}</div><div class="stat-label">Previous Papers</div></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="bi bi-briefcase-fill"></i></div><div class="stat-info"><div class="stat-number">{{ data.placements }}</div><div class="stat-label">Active Placements</div></div></div>
+    <div class="stat-card"><div class="stat-icon {% if data.has_resume %}green{% else %}orange{% endif %}"><i class="bi bi-file-person-fill"></i></div><div class="stat-info"><div class="stat-number">{{ '✅' if data.has_resume else '❌' }}</div><div class="stat-label">Resume {{ 'Created' if data.has_resume else 'Not Created' }}</div></div></div>
+</div>
+<div class="cards-grid">
+    <div class="card"><div class="card-header"><h4>⚡ Quick Actions</h4></div><div class="card-body"><div class="btn-group" style="flex-wrap:wrap">
+        {% if data.has_resume %}<a href="/resume/edit" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i> Edit Resume</a><a href="/resume/portfolio" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i> View Portfolio</a>
+        {% else %}<a href="/resume/create" class="btn btn-primary btn-sm"><i class="bi bi-plus"></i> Create Resume</a>{% endif %}
+        <a href="/student/notes" class="btn btn-outline btn-sm"><i class="bi bi-journal-text"></i> Notes</a>
+        <a href="/student/papers" class="btn btn-outline btn-sm"><i class="bi bi-file-earmark"></i> Papers</a>
+        <a href="/student/placements" class="btn btn-outline btn-sm"><i class="bi bi-briefcase"></i> Placements</a>
+        <a href="/chatbot" class="btn btn-outline btn-sm"><i class="bi bi-robot"></i> AI Chat</a>
+    </div></div></div>
+    <div class="card"><div class="card-header"><h4>💼 Active Placements</h4></div><div class="card-body">
+        {% if active_placements %}{% for p in active_placements %}<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color)"><div><strong style="font-size:13px">{{ p.company }}</strong><br><small class="text-muted">{{ p.role }} · {{ p.package }}</small></div>{% if p.deadline %}<span class="badge badge-warning">{{ p.deadline }}</span>{% endif %}</div>{% endfor %}
+        {% else %}<p class="text-muted" style="font-size:13px">No active placement drives</p>{% endif %}
+    </div></div>
+</div>
+{% endblock %}

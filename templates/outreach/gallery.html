@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Outreach Gallery{% endblock %}
+{% block page_title %}Outreach Events{% endblock %}
+{% block content %}
+{% if events %}
+<div class="gallery-grid">
+{% for e in events %}
+<a href="/outreach/event/{{ e.id }}" class="gallery-card" style="text-decoration:none;color:inherit">
+    <div class="gallery-card-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0b3d91,#1976d2);color:rgba(255,255,255,0.3);font-size:40px">
+        {% if e.images and e.images|length > 0 %}
+        <img src="/uploads/outreach/{{ e.images[0].filename }}" style="width:100%;height:100%;object-fit:cover" alt="{{ e.title }}">
+        {% else %}<i class="bi bi-calendar-event"></i>{% endif %}
+    </div>
+    <div class="gallery-card-body">
+        <h4>{{ e.title }}</h4>
+        <p>{{ e.description[:80] }}{% if e.description|length > 80 %}...{% endif %}</p>
+        <div class="gallery-card-meta">
+            <span><i class="bi bi-calendar3"></i> {{ e.event_date }}</span>
+            <span><i class="bi bi-geo-alt"></i> {{ e.location or 'Campus' }}</span>
+        </div>
+    </div>
+</a>
+{% endfor %}
+</div>
+{% else %}<div class="card"><div class="card-body"><div class="empty-state"><i class="bi bi-calendar-x"></i><h4>No Events</h4></div></div></div>{% endif %}
+{% endblock %}

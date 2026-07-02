@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Loyola Academy ERP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { height: 100%; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #0a1f44 0%, #0a1f44 100%); min-height: 100vh; }
+        .container { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .login-box { width: 450px; max-width: 100%; background: #ffffff; padding: 40px; border-radius: 10px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); }
+        .login-box h2 { text-align: center; color: #0a1f44; font-size: 32px; margin-bottom: 30px; font-weight: 600; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #0a1f44; font-weight: 500; font-size: 14px; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; transition: all 0.3s ease; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #0a1f44; box-shadow: 0 0 5px rgba(102, 126, 234, 0.3); }
+        .form-group select { cursor: pointer; background: #fff; }
+        .btn-login { width: 100%; padding: 14px; background: #0a1f44; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s ease; margin-top: 10px; }
+        .btn-login:hover { background: #020f5b; }
+        .error { color: #d32f2f; background: #ffebee; padding: 12px; border-radius: 6px; margin-bottom: 20px; text-align: center; font-size: 14px; }
+        .message { color: #388e3c; background: #e8f5e9; padding: 12px; border-radius: 6px; margin-bottom: 20px; text-align: center; font-size: 14px; }
+        .links { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
+        .links a { color: #0a1f44; text-decoration: none; font-size: 14px; transition: color 0.3s ease; }
+        .links a:hover { color: #0a1f44; text-decoration: underline; }
+        .divider { color: #ddd; }
+    </style>
+    <script>
+        function toggleRollNo() {
+            var role = document.getElementById("role").value;
+            var rollNoGroup = document.getElementById("roll_no_group");
+            if(role === "student") {
+                rollNoGroup.style.display = "block";
+                document.getElementById("roll_no").required = true;
+            } else {
+                rollNoGroup.style.display = "none";
+                document.getElementById("roll_no").required = false;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h2>Sign Up</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% if category == 'danger' %}
+                            <div class="error">{{ message }}</div>
+                        {% else %}
+                            <div class="message">{{ message }}</div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('auth.signup') }}">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="full_name" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required placeholder="johndoe123">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="john@loyola.edu">
+                </div>
+                <div class="form-group">
+                    <label>Phone (Optional)</label>
+                    <input type="text" name="phone" placeholder="9999999999">
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select name="role" id="role" onchange="toggleRollNo()" required>
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="hod">HOD</option>
+                    </select>
+                </div>
+                <div class="form-group" id="roll_no_group">
+                    <label>Roll Number</label>
+                    <input type="text" name="roll_no" id="roll_no" required placeholder="e.g. 1111-20-XXX">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-login">Sign Up</button>
+            </form>
+
+            <div class="links">
+                <a href="{{ url_for('auth.index') }}">Back to Home</a>
+                <span class="divider">|</span>
+                <a href="{{ url_for('auth.login') }}">Login instead</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

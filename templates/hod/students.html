@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Student Reports{% endblock %}
+{% block page_title %}Student Reports{% endblock %}
+{% block content %}
+<div class="card"><div class="card-body">
+{% if students %}
+<div class="table-responsive"><table class="data-table"><thead><tr><th>Name</th><th>Roll No</th><th>Email</th><th>Semester</th><th>Batch</th><th>Status</th></tr></thead><tbody>
+{% for s in students %}<tr><td><strong>{{ s.full_name }}</strong></td><td>{{ s.roll_no or '—' }}</td><td>{{ s.email }}</td><td>{{ s.semester or '—' }}</td><td>{{ s.batch_year or '—' }}</td><td><span class="badge {% if s.status=='Active' %}badge-success{% else %}badge-danger{% endif %}">{{ s.status }}</span></td></tr>{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-state"><i class="bi bi-person-badge"></i><h4>No Students</h4></div>{% endif %}
+</div></div>
+{% endblock %}

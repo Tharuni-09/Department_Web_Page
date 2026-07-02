@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% block title %}Previous Year Papers{% endblock %}
+
+{% block content %}
+<style>
+.header{
+  margin-bottom:40px;
+}
+
+.header h1{
+  color:#0a1f44;
+  font-size:28px;
+  margin-bottom:6px;
+}
+
+.header p{
+  color:#666;
+  font-size:14px;
+}
+
+/* FILTER SECTION */
+.filter-box{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.05);
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-bottom:40px;
+}
+
+select, input[type="text"], input[type="number"] {
+  padding:5px 10px;
+  border-radius:8px;
+  border:1px solid #d6dbe6;
+  font-size:14px;
+  background:#f9fbff;
+}
+
+/* PAPER GRID */
+.paper-container{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap:20px;
+}
+
+/* CARD */
+.paper-card{
+  background:white;
+  border-radius:10px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.05);
+  aspect-ratio:auto;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition:0.3s;
+}
+
+.paper-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 12px 30px rgba(0,0,0,0.08);
+}
+
+.paper-card h3{
+  color:#0a1f44;
+  font-size:17px;
+  margin-bottom:8px;
+}
+
+.meta{
+  font-size:13px;
+  color:#777;
+  margin-bottom:15px;
+}
+
+.buttons{
+  display:flex;
+  gap:10px;
+  margin-top:auto;
+  flex-wrap: wrap;
+}
+
+.buttons a, .buttons button{
+  flex:1;
+  text-align:center;
+  padding:8px 0;
+  border-radius:6px;
+  font-size:13px;
+  text-decoration:none;
+  transition:0.3s;
+  cursor: pointer;
+  border: none;
+}
+
+.view-btn{
+  background:#eef3ff;
+  color:#1c3faa;
+}
+
+.view-btn:hover{
+  background:#dce6ff;
+}
+
+.download-btn{
+  background:#0a1f44;
+  color:white;
+}
+
+.download-btn:hover{
+  background:#1c3faa;
+}
+
+.add-btn {
+  background: #10b981;
+  color: white;
+}
+
+.add-btn:hover {
+  background: #059669;
+}
+</style>
+
+<div class="page-container">
+    <div class="header">
+        <h1>Previous Year Question Papers</h1>
+        <p>Department of Computer Science & Machine Learning</p>
+    </div>
+
+    <div class="filter-box" style="justify-content: space-between; align-items: center;">
+        <div style="display:flex; gap:10px;">
+            <select id="yearFilter">
+                <option value="all">All Academic Years</option>
+                <option value="2023-24">2023-24</option>
+                <option value="2024-25">2024-25</option>
+                <option value="2025-26">2025-26</option>
+            </select>
+
+            <select id="semFilter">
+                <option value="all">All Semesters</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+            </select>
+            
+            <select id="regFilter">
+                <option value="all">All Regulations</option>
+                <option value="R20">R20</option>
+                <option value="R21">R21</option>
+                <option value="R22">R22</option>
+                <option value="R23">R23</option>
+                <option value="R24">R24</option>
+            </select>
+        </div>
+        
+        {% if session.role in ['faculty', 'admin', 'hod'] %}
+        <a href="{{ url_for('faculty.upload_paper') if session.role == 'faculty' else '#' }}" class="add-btn" style="padding: 10px 16px; border-radius: 6px; text-decoration: none; font-weight: bold;">+ Upload Paper</a>
+        {% endif %}
+    </div>
+
+    <div class="paper-container">
+    {% for paper in papers %}
+    <div class="paper-card" data-year="{{ paper.academic_year }}" data-sem="{{ paper.semester }}" data-reg="{{ paper.regulation }}">
+        <h3 style="margin-bottom: 4px;">{{ paper.title }}</h3>
+        <div class="meta">{{ paper.subject }} • Sem {{ paper.semester }} • {{ paper.academic_year }} • {{ paper.regulation }}</div>
+        
+        <div style="font-size: 11px; margin-bottom: 15px; color: #64748b; font-weight: 600;">
+            Pages: {{ paper.num_pages }} | Uploaded by: {{ paper.uploader.full_name }}
+        </div>
+        
+        <div class="buttons">
+            <a href="{{ url_for('papers.download_paper', filename=paper.filename) }}" class="view-btn" target="_blank">View</a>
+            <a href="{{ url_for('papers.download_paper', filename=paper.filename) }}" download class="download-btn">Download</a>
+        </div>
+    </div>
+    {% else %}
+    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666; background: white; border-radius: 12px;">
+        <i class="fas fa-file-alt" style="font-size: 32px; color: #cbd5e1; margin-bottom: 10px; display: block;"></i>
+        No approved papers available yet.
+    </div>
+    {% endfor %}
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const yearFilter = document.getElementById("yearFilter");
+  const semFilter = document.getElementById("semFilter");
+  const regFilter = document.getElementById("regFilter");
+  const cards = document.querySelectorAll(".paper-card");
+  
+  function filterPapers() {
+    const yearValue = yearFilter.value;
+    const semValue = semFilter.value;
+    const regValue = regFilter.value;
+    
+    cards.forEach(card => {
+      const cardYear = card.dataset.year;
+      const cardSem = card.dataset.sem;
+      const cardReg = card.dataset.reg;
+      
+      const yearMatch = (yearValue === "all" || yearValue === cardYear);
+      const semMatch = (semValue === "all" || semValue === cardSem);
+      const regMatch = (regValue === "all" || regValue === cardReg);
+      
+      card.style.display = (yearMatch && semMatch && regMatch) ? "flex" : "none";
+    });
+  }
+  
+  yearFilter.addEventListener("change", filterPapers);
+  semFilter.addEventListener("change", filterPapers);
+  regFilter.addEventListener("change", filterPapers);
+});
+</script>
+{% endblock %}

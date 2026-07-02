@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Placements{% endblock %}
+{% block page_title %}Placement Portal{% endblock %}
+{% block content %}
+<h3 class="mb-2">🟢 Active Drives</h3>
+{% if active %}
+<div class="gallery-grid">
+{% for p in active %}
+<div class="gallery-card"><div class="card-body">
+    <h4 style="font-size:16px;font-weight:700;margin-bottom:4px">{{ p.company }}</h4>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">{{ p.role }}</p>
+    <div style="display:flex;gap:12px;margin-bottom:10px;font-size:13px"><span><i class="bi bi-currency-rupee"></i> {{ p.package }}</span>{% if p.deadline %}<span><i class="bi bi-calendar3"></i> {{ p.deadline }}</span>{% endif %}</div>
+    {% if p.eligibility %}<p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">{{ p.eligibility[:120] }}</p>{% endif %}
+    {% if p.apply_link %}<a href="{{ p.apply_link }}" target="_blank" class="btn btn-primary btn-sm"><i class="bi bi-box-arrow-up-right"></i> Apply Now</a>{% endif %}
+</div></div>
+{% endfor %}
+</div>
+{% else %}<div class="card mb-3"><div class="card-body"><div class="empty-state"><i class="bi bi-briefcase"></i><h4>No Active Drives</h4></div></div></div>{% endif %}
+
+{% if past %}
+<h3 class="mb-2 mt-3">📁 Past Drives</h3>
+<div class="card"><div class="card-body"><div class="table-responsive"><table class="data-table"><thead><tr><th>Company</th><th>Role</th><th>Package</th><th>Status</th></tr></thead><tbody>
+{% for p in past %}<tr><td>{{ p.company }}</td><td>{{ p.role }}</td><td>{{ p.package }}</td><td><span class="badge badge-danger">{{ p.status|capitalize }}</span></td></tr>{% endfor %}
+</tbody></table></div></div></div>
+{% endif %}
+{% endblock %}

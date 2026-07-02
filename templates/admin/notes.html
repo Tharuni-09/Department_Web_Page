@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Notes Management{% endblock %}
+{% block page_title %}Notes Management{% endblock %}
+{% block content %}
+<div class="page-header"><h3>📒 Notes</h3></div>
+<div class="filter-bar">
+    <a href="/admin/notes?status=all" class="filter-btn {{ 'active' if current_filter=='all' }}">All</a>
+    <a href="/admin/notes?status=pending" class="filter-btn {{ 'active' if current_filter=='pending' }}">⏳ Pending</a>
+    <a href="/admin/notes?status=approved" class="filter-btn {{ 'active' if current_filter=='approved' }}">✅ Approved</a>
+    <a href="/admin/notes?status=rejected" class="filter-btn {{ 'active' if current_filter=='rejected' }}">❌ Rejected</a>
+</div>
+<div class="card"><div class="card-body">
+{% if notes %}
+<div class="table-responsive"><table class="data-table"><thead><tr><th>Title</th><th>Subject</th><th>Sem</th><th>Uploaded By</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>
+{% for n in notes %}
+<tr><td><strong>{{ n.title }}</strong></td><td>{{ n.subject }}</td><td>{{ n.semester }}</td>
+<td>{{ n.uploader.full_name if n.uploader else 'Unknown' }}</td>
+<td><span class="badge {% if n.status=='approved' %}badge-success{% elif n.status=='pending' %}badge-warning{% else %}badge-danger{% endif %}">{{ n.status|capitalize }}</span></td>
+<td style="font-size:12px;color:var(--text-muted)">{{ n.created_at.strftime('%d %b %Y') if n.created_at else '' }}</td>
+<td><div class="btn-group">
+{% if n.status == 'pending' %}
+<a href="/admin/notes/approve/{{ n.id }}" class="btn btn-success btn-sm" title="Approve"><i class="bi bi-check-lg"></i></a>
+<button class="btn btn-danger btn-sm" onclick="openModal('reject-{{ n.id }}')" title="Reject"><i class="bi bi-x-lg"></i></button>
+{% endif %}
+<a href="/notes/download/{{ n.filename }}" class="btn btn-outline btn-sm" title="Download"><i class="bi bi-download"></i></a>
+<a href="javascript:void(0)" onclick="confirmDelete('/admin/notes/delete/{{ n.id }}','{{ n.title }}')" class="btn btn-danger btn-sm" title="Delete"><i class="bi bi-trash"></i></a>
+</div></td></tr>
+<!-- Reject Modal -->
+{% if n.status == 'pending' %}
+<div class="modal-overlay" id="reject-{{ n.id }}"><div class="modal-box"><h3>Reject: {{ n.title }}</h3><form method="POST" action="/admin/notes/reject/{{ n.id }}"><div class="form-group"><label>Reason</label><textarea name="reason" class="form-control" placeholder="Enter rejection reason..."></textarea></div><div class="btn-group"><button type="submit" class="btn btn-danger">Reject</button><button type="button" class="btn btn-outline" onclick="closeModal('reject-{{ n.id }}')">Cancel</button></div></form></div></div>
+{% endif %}
+{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-state"><i class="bi bi-journal-x"></i><h4>No Notes Found</h4><p>No notes match the selected filter.</p></div>{% endif %}
+</div></div>
+{% endblock %}

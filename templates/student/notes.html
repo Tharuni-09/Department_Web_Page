@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Notes{% endblock %}
+{% block page_title %}Study Notes{% endblock %}
+{% block content %}
+<div class="card"><div class="card-body">
+{% if notes %}
+<div class="table-responsive"><table class="data-table"><thead><tr><th>Title</th><th>Subject</th><th>Semester</th><th>Download</th></tr></thead><tbody>
+{% for n in notes %}<tr><td><strong>{{ n.title }}</strong>{% if n.description %}<br><small class="text-muted">{{ n.description[:60] }}</small>{% endif %}</td><td>{{ n.subject }}</td><td>Sem {{ n.semester }}</td><td><a href="/notes/download/{{ n.filename }}" class="btn btn-primary btn-sm"><i class="bi bi-download"></i> Download</a></td></tr>{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-state"><i class="bi bi-journal"></i><h4>No Notes Available</h4><p>Approved notes will appear here.</p></div>{% endif %}
+</div></div>
+{% endblock %}

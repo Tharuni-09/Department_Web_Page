@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Student Management{% endblock %}
+
+{% block page_title %}Student Management{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+    <!-- ================= FORM ================= -->
+    <div class="card-panel">
+
+        {% if edit %}
+            <h4>✏️ Edit Student</h4>
+            <form method="POST" action="/admin/students/update/{{ edit.id }}">
+        {% else %}
+            <h4>➕ Add Student</h4>
+            <form method="POST" action="/admin/students/add">
+        {% endif %}
+
+            <div class="form-grid">
+
+                <input type="text" name="name"
+                       placeholder="Full Name"
+                       class="form-control"
+                       value="{{ edit.name if edit else '' }}"
+                       required>
+
+                <input type="text" name="rollno"
+                       placeholder="Roll Number"
+                       class="form-control"
+                       value="{{ edit.rollno if edit else '' }}"
+                       required>
+
+                <input type="text" name="department"
+                       placeholder="Department"
+                       class="form-control"
+                       value="{{ edit.department if edit else '' }}"
+                       required>
+
+            </div>
+
+            <button type="submit" class="btn btn-success mt-3">
+                {% if edit %} Update Student {% else %} Save Student {% endif %}
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- ================= TABLE ================= -->
+    <div class="card-panel mt-4">
+
+        <h4>👨‍🎓 Student List</h4>
+
+        <div class="table-responsive">
+
+            <table class="table table-striped">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Roll No</th>
+                        <th>Department</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for s in students %}
+
+                    <tr>
+                        <td>{{ s.id }}</td>
+                        <td>{{ s.name }}</td>
+                        <td>{{ s.rollno }}</td>
+                        <td>{{ s.department }}</td>
+
+                        <td>
+
+                            <a href="/admin/students/edit/{{ s.id }}"
+                               class="btn btn-sm btn-warning">
+                                Edit
+                            </a>
+
+                            <a href="/admin/students/delete/{{ s.id }}"
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('Delete this student?')">
+                                Delete
+                            </a>
+
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

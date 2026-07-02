@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ event.title }}{% endblock %}
+{% block page_title %}Event Details{% endblock %}
+{% block content %}
+<div class="card" style="max-width:900px">
+    <div class="card-body" style="padding:28px">
+        <a href="/outreach" style="font-size:13px;display:inline-flex;align-items:center;gap:4px;margin-bottom:16px;color:var(--text-secondary)"><i class="bi bi-arrow-left"></i> Back to Events</a>
+        <h2 style="font-size:24px;font-weight:800;margin-bottom:8px">{{ event.title }}</h2>
+        <div style="display:flex;gap:16px;margin-bottom:20px;font-size:13px;color:var(--text-muted);flex-wrap:wrap">
+            <span><i class="bi bi-calendar3"></i> {{ event.event_date }}</span>
+            <span><i class="bi bi-geo-alt-fill"></i> {{ event.location or 'Campus' }}</span>
+            <span class="badge badge-info">{{ event.category|capitalize }}</span>
+        </div>
+        <p style="font-size:15px;line-height:1.8;color:var(--text-secondary);margin-bottom:24px">{{ event.description }}</p>
+
+        {% if event.images %}
+        <h4 style="margin-bottom:12px;font-size:15px;font-weight:700">📸 Event Photos</h4>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px">
+            {% for img in event.images %}
+            <img src="/uploads/outreach/{{ img.filename }}" alt="{{ img.caption or event.title }}" style="width:100%;height:200px;object-fit:cover;border-radius:12px;border:1px solid var(--border-color);cursor:pointer" onclick="this.style.height=this.style.height==='200px'?'auto':'200px'">
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

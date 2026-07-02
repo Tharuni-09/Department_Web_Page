@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Outreach Management{% endblock %}
+{% block page_title %}Outreach Events{% endblock %}
+{% block content %}
+<div class="page-header"><h3>🌍 Outreach Events</h3><a href="/admin/outreach/add" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Event</a></div>
+<div class="card"><div class="card-body">
+{% if outreach %}
+<div class="table-responsive"><table class="data-table"><thead><tr><th>Title</th><th>Date</th><th>Category</th><th>Location</th><th>Images</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for o in outreach %}
+<tr><td><strong>{{ o.title }}</strong></td><td>{{ o.event_date }}</td><td><span class="badge badge-info">{{ o.category|capitalize }}</span></td><td>{{ o.location or '—' }}</td><td>{{ o.images|length }} 📷</td>
+<td><span class="badge {% if o.status=='active' %}badge-success{% else %}badge-danger{% endif %}">{{ o.status|capitalize }}</span></td>
+<td><div class="btn-group"><a href="/admin/outreach/edit/{{ o.id }}" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a><a href="javascript:void(0)" onclick="confirmDelete('/admin/outreach/delete/{{ o.id }}','{{ o.title }}')" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a></div></td></tr>
+{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-state"><i class="bi bi-globe"></i><h4>No Events</h4><p>Add outreach events to showcase department activities.</p></div>{% endif %}
+</div></div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Faculty Management{% endblock %}
+{% block page_title %}Faculty & HOD Management{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h3>👨‍🏫 Faculty List</h3>
+    <a href="/admin/faculty/add" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Faculty</a>
+</div>
+<div class="card">
+    <div class="card-body">
+        {% if faculty %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead><tr><th>Name</th><th>Email</th><th>Department</th><th>Designation</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody>
+                {% for f in faculty %}
+                <tr>
+                    <td><strong>{{ f.full_name }}</strong></td>
+                    <td>{{ f.email }}</td>
+                    <td>{{ f.department }}</td>
+                    <td>{{ f.designation or '—' }}</td>
+                    <td><span class="badge {% if f.role=='hod' %}badge-purple{% else %}badge-info{% endif %}">{{ f.role|upper }}</span></td>
+                    <td><span class="badge {% if f.status=='Active' %}badge-success{% else %}badge-danger{% endif %}">{{ f.status }}</span></td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="/admin/faculty/edit/{{ f.id }}" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
+                            <a href="javascript:void(0)" onclick="confirmDelete('/admin/faculty/delete/{{ f.id }}','{{ f.full_name }}')" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state"><i class="bi bi-people"></i><h4>No Faculty Added</h4><p>Add faculty members to get started.</p></div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

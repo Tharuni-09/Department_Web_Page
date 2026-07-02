@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Approve Notes{% endblock %}
+{% block page_title %}Approve Notes{% endblock %}
+{% block content %}
+<div class="filter-bar">
+    <a href="/hod/notes?status=pending" class="filter-btn {{ 'active' if current_filter=='pending' }}">⏳ Pending</a>
+    <a href="/hod/notes?status=approved" class="filter-btn {{ 'active' if current_filter=='approved' }}">✅ Approved</a>
+    <a href="/hod/notes?status=rejected" class="filter-btn {{ 'active' if current_filter=='rejected' }}">❌ Rejected</a>
+    <a href="/hod/notes?status=all" class="filter-btn {{ 'active' if current_filter=='all' }}">All</a>
+</div>
+<div class="card"><div class="card-body">
+{% if notes %}
+<div class="table-responsive"><table class="data-table"><thead><tr><th>Title</th><th>Subject</th><th>Sem</th><th>By</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for n in notes %}
+<tr><td><strong>{{ n.title }}</strong></td><td>{{ n.subject }}</td><td>{{ n.semester }}</td><td>{{ n.uploader.full_name if n.uploader else '—' }}</td>
+<td><span class="badge {% if n.status=='approved' %}badge-success{% elif n.status=='pending' %}badge-warning{% else %}badge-danger{% endif %}">{{ n.status|capitalize }}</span></td>
+<td><div class="btn-group">
+{% if n.status=='pending' %}<a href="/hod/notes/approve/{{ n.id }}" class="btn btn-success btn-sm"><i class="bi bi-check-lg"></i></a>
+<button class="btn btn-danger btn-sm" onclick="openModal('hrej-{{ n.id }}')"><i class="bi bi-x-lg"></i></button>{% endif %}
+<a href="/notes/download/{{ n.filename }}" class="btn btn-outline btn-sm"><i class="bi bi-download"></i></a>
+</div></td></tr>
+{% if n.status=='pending' %}<div class="modal-overlay" id="hrej-{{ n.id }}"><div class="modal-box"><h3>Reject: {{ n.title }}</h3><form method="POST" action="/hod/notes/reject/{{ n.id }}"><div class="form-group"><label>Reason</label><textarea name="reason" class="form-control"></textarea></div><div class="btn-group"><button type="submit" class="btn btn-danger">Reject</button><button type="button" class="btn btn-outline" onclick="closeModal('hrej-{{ n.id }}')">Cancel</button></div></form></div></div>{% endif %}
+{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-state"><i class="bi bi-journal-check"></i><h4>No Notes</h4></div>{% endif %}
+</div></div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}AI Assistant{% endblock %}
+{% block page_title %}AI Study Assistant{% endblock %}
+{% block content %}
+<div class="chat-container">
+    <div class="chat-messages" id="chatMessages">
+        <div class="chat-bubble bot">
+            <strong>🤖 AI Assistant</strong><br>
+            Hello! I'm your Department AI Assistant. I can help with:<br>
+            • Machine Learning, Deep Learning, AI concepts<br>
+            • Python, Java programming<br>
+            • DBMS, Computer Networks, OS, DAA<br>
+            • Interview prep & Resume tips<br><br>
+            Ask me anything! 🎓
+        </div>
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="Type your question..." onkeypress="if(event.key==='Enter')sendMessage()">
+        <button class="btn btn-primary" onclick="sendMessage()"><i class="bi bi-send-fill"></i></button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function sendMessage(){
+    const input=document.getElementById('chatInput');
+    const msg=input.value.trim();
+    if(!msg)return;
+    const chat=document.getElementById('chatMessages');
+
+    // User bubble
+    chat.innerHTML+='<div class="chat-bubble user">'+escapeHtml(msg)+'</div>';
+    input.value='';
+    chat.scrollTop=chat.scrollHeight;
+
+    // Loading
+    const loadId='load-'+Date.now();
+    chat.innerHTML+='<div class="chat-bubble bot" id="'+loadId+'"><em>Thinking...</em></div>';
+    chat.scrollTop=chat.scrollHeight;
+
+    fetch('/chatbot/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg})})
+    .then(r=>r.json())
+    .then(data=>{
+        document.getElementById(loadId).innerHTML='<strong>🤖 AI:</strong><br>'+data.response.replace(/\n/g,'<br>');
+        chat.scrollTop=chat.scrollHeight;
+    })
+    .catch(()=>{
+        document.getElementById(loadId).innerHTML='<strong>⚠️</strong> Error getting response. Try again.';
+    });
+}
+function escapeHtml(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML}
+</script>
+{% endblock %}

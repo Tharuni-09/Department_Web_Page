@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Approve Papers{% endblock %}
+{% block page_title %}Approve Papers{% endblock %}
+{% block content %}
+<div class="filter-bar">
+    <a href="/hod/papers?status=pending" class="filter-btn {{ 'active' if current_filter=='pending' }}">⏳ Pending</a>
+    <a href="/hod/papers?status=approved" class="filter-btn {{ 'active' if current_filter=='approved' }}">✅ Approved</a>
+    <a href="/hod/papers?status=all" class="filter-btn {{ 'active' if current_filter=='all' }}">All</a>
+</div>
+<div class="card"><div class="card-body">
+{% if papers %}
+<div class="table-responsive"><table class="data-table"><thead><tr><th>Title</th><th>Subject</th><th>Sem</th><th>Regulation</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for p in papers %}
+<tr><td><strong>{{ p.title }}</strong></td><td>{{ p.subject }}</td><td>{{ p.semester }}</td><td>{{ p.regulation or '—' }}</td>
+<td><span class="badge {% if p.status=='approved' %}badge-success{% elif p.status=='pending' %}badge-warning{% else %}badge-danger{% endif %}">{{ p.status|capitalize }}</span></td>
+<td><div class="btn-group">
+{% if p.status=='pending' %}<a href="/hod/papers/approve/{{ p.id }}" class="btn btn-success btn-sm"><i class="bi bi-check-lg"></i></a>
+<button class="btn btn-danger btn-sm" onclick="openModal('hrejp-{{ p.id }}')"><i class="bi bi-x-lg"></i></button>{% endif %}
+<a href="/papers/download/{{ p.filename }}" class="btn btn-outline btn-sm"><i class="bi bi-download"></i></a>
+</div></td></tr>
+{% if p.status=='pending' %}<div class="modal-overlay" id="hrejp-{{ p.id }}"><div class="modal-box"><h3>Reject: {{ p.title }}</h3><form method="POST" action="/hod/papers/reject/{{ p.id }}"><div class="form-group"><label>Reason</label><textarea name="reason" class="form-control"></textarea></div><div class="btn-group"><button type="submit" class="btn btn-danger">Reject</button><button type="button" class="btn btn-outline" onclick="closeModal('hrejp-{{ p.id }}')">Cancel</button></div></form></div></div>{% endif %}
+{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-state"><i class="bi bi-file-earmark-check"></i><h4>No Papers</h4></div>{% endif %}
+</div></div>
+{% endblock %}

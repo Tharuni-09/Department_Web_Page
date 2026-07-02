@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if edit else 'Add' }} Outreach Event{% endblock %}
+{% block page_title %}{{ 'Edit' if edit else 'Add' }} Outreach Event{% endblock %}
+{% block content %}
+<div class="form-card" style="max-width:700px">
+    <h3>{{ '✏️ Edit Event' if edit else '➕ Add Outreach Event' }}</h3>
+    <form method="POST" action="{{ '/admin/outreach/edit/' ~ edit.id if edit else '/admin/outreach/add' }}" enctype="multipart/form-data">
+        <div class="form-group"><label>Event Title *</label><input type="text" name="title" class="form-control" value="{{ edit.title if edit else '' }}" required></div>
+        <div class="form-group"><label>Description *</label><textarea name="description" class="form-control" rows="4" required>{{ edit.description if edit else '' }}</textarea></div>
+        <div class="form-row">
+            <div class="form-group"><label>Event Date *</label><input type="date" name="event_date" class="form-control" value="{{ edit.event_date if edit else '' }}" required></div>
+            <div class="form-group"><label>Location</label><input type="text" name="location" class="form-control" value="{{ edit.location if edit else '' }}" placeholder="e.g. Seminar Hall"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Category</label><select name="category" class="form-control">{% for c in categories %}<option value="{{ c|lower }}" {{ 'selected' if edit and edit.category==c|lower }}>{{ c }}</option>{% endfor %}</select></div>
+            {% if edit %}<div class="form-group"><label>Status</label><select name="status" class="form-control"><option value="active" {{ 'selected' if edit.status=='active' }}>Active</option><option value="inactive" {{ 'selected' if edit.status=='inactive' }}>Inactive</option></select></div>{% endif %}
+        </div>
+        <div class="form-group">
+            <label>📸 Upload Images</label>
+            <div class="file-input-wrapper">
+                <input type="file" name="images" multiple accept="image/*">
+                <i class="bi bi-cloud-arrow-up"></i>
+                <span>Click or drag images here (multiple allowed)</span>
+            </div>
+        </div>
+        {% if edit and edit.images %}
+        <div class="form-group"><label>Current Images</label>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+            {% for img in edit.images %}
+            <div style="position:relative;width:120px">
+                <img src="/uploads/outreach/{{ img.filename }}" style="width:120px;height:90px;object-fit:cover;border-radius:8px;border:1px solid var(--border-color)">
+                <a href="/admin/outreach/image/delete/{{ img.id }}" style="position:absolute;top:-6px;right:-6px;background:var(--accent-red);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;text-decoration:none" onclick="return confirm('Remove this image?')"><i class="bi bi-x"></i></a>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        <div style="margin-top:24px;display:flex;gap:12px">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> {{ 'Update' if edit else 'Save' }} Event</button>
+            <a href="/admin/outreach" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

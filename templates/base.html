@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Loyola ERP{% endblock %} | Loyola Academy</title>
+    <meta name="description" content="Department of Computer Science & Machine Learning - Loyola Academy ERP System">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+<div class="app-layout">
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>Loyola ERP</h1>
+                    <span>CS & ML Department</span>
+                </div>
+            </div>
+            <button class="sidebar-close" onclick="toggleSidebar()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            {% if session.role == 'admin' %}
+            <div class="nav-section">
+                <span class="nav-section-title">Main</span>
+                <a href="/admin/dashboard" class="nav-link {{ 'active' if request.path == '/admin/dashboard' }}">
+                    <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Management</span>
+                <a href="/admin/faculty" class="nav-link {{ 'active' if '/admin/faculty' in request.path }}">
+                    <i class="bi bi-people-fill"></i><span>Faculty & HOD</span>
+                </a>
+                <a href="/admin/students" class="nav-link {{ 'active' if '/admin/students' in request.path }}">
+                    <i class="bi bi-person-badge-fill"></i><span>Students</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Academic</span>
+                <a href="/admin/notes" class="nav-link {{ 'active' if '/admin/notes' in request.path }}">
+                    <i class="bi bi-journal-text"></i><span>Notes</span>
+                </a>
+                <a href="/admin/papers" class="nav-link {{ 'active' if '/admin/papers' in request.path }}">
+                    <i class="bi bi-file-earmark-text-fill"></i><span>Previous Papers</span>
+                </a>
+                <a href="/admin/resumes" class="nav-link {{ 'active' if '/admin/resumes' in request.path }}">
+                    <i class="bi bi-file-person-fill"></i><span>Resumes</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Activities</span>
+                <a href="/admin/outreach" class="nav-link {{ 'active' if '/admin/outreach' in request.path }}">
+                    <i class="bi bi-globe2"></i><span>Outreach</span>
+                </a>
+                <a href="/admin/placements" class="nav-link {{ 'active' if '/admin/placements' in request.path }}">
+                    <i class="bi bi-briefcase-fill"></i><span>Placements</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Tools</span>
+                <a href="/chatbot" class="nav-link {{ 'active' if '/chatbot' in request.path }}">
+                    <i class="bi bi-robot"></i><span>AI Assistant</span>
+                </a>
+                <a href="/ppt" class="nav-link {{ 'active' if '/ppt' in request.path }}">
+                    <i class="bi bi-easel2-fill"></i><span>PPT Generator</span>
+                </a>
+                <a href="/admin/settings" class="nav-link {{ 'active' if '/admin/settings' in request.path }}">
+                    <i class="bi bi-gear-fill"></i><span>Settings</span>
+                </a>
+            </div>
+
+            {% elif session.role == 'hod' %}
+            <div class="nav-section">
+                <span class="nav-section-title">Main</span>
+                <a href="/hod/dashboard" class="nav-link {{ 'active' if request.path == '/hod/dashboard' }}">
+                    <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Department</span>
+                <a href="/hod/faculty" class="nav-link {{ 'active' if '/hod/faculty' in request.path }}">
+                    <i class="bi bi-people-fill"></i><span>Faculty</span>
+                </a>
+                <a href="/hod/students" class="nav-link {{ 'active' if '/hod/students' in request.path }}">
+                    <i class="bi bi-person-badge-fill"></i><span>Student Reports</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Approvals</span>
+                <a href="/hod/notes" class="nav-link {{ 'active' if '/hod/notes' in request.path }}">
+                    <i class="bi bi-journal-check"></i><span>Approve Notes</span>
+                </a>
+                <a href="/hod/papers" class="nav-link {{ 'active' if '/hod/papers' in request.path }}">
+                    <i class="bi bi-file-earmark-check-fill"></i><span>Approve Papers</span>
+                </a>
+                <a href="/hod/resumes" class="nav-link {{ 'active' if '/hod/resumes' in request.path }}">
+                    <i class="bi bi-file-person-fill"></i><span>Resume View</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Tools</span>
+                <a href="/chatbot" class="nav-link"><i class="bi bi-robot"></i><span>AI Assistant</span></a>
+                <a href="/ppt" class="nav-link"><i class="bi bi-easel2-fill"></i><span>PPT Generator</span></a>
+                <a href="/faculty/profile" class="nav-link"><i class="bi bi-person-circle"></i><span>Profile</span></a>
+            </div>
+
+            {% elif session.role == 'faculty' %}
+            <div class="nav-section">
+                <span class="nav-section-title">Main</span>
+                <a href="/faculty/dashboard" class="nav-link {{ 'active' if request.path == '/faculty/dashboard' }}">
+                    <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Academic</span>
+                <a href="/faculty/notes" class="nav-link {{ 'active' if '/faculty/notes' in request.path }}">
+                    <i class="bi bi-journal-text"></i><span>Upload Notes</span>
+                </a>
+                <a href="/faculty/papers" class="nav-link {{ 'active' if '/faculty/papers' in request.path }}">
+                    <i class="bi bi-file-earmark-text-fill"></i><span>Upload Papers</span>
+                </a>
+                <a href="/faculty/resumes" class="nav-link {{ 'active' if '/faculty/resumes' in request.path }}">
+                    <i class="bi bi-file-person-fill"></i><span>Student Resumes</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Tools</span>
+                <a href="/chatbot" class="nav-link"><i class="bi bi-robot"></i><span>AI Chat</span></a>
+                <a href="/ppt" class="nav-link"><i class="bi bi-easel2-fill"></i><span>PPT Generator</span></a>
+                <a href="/faculty/profile" class="nav-link"><i class="bi bi-person-circle"></i><span>Profile</span></a>
+            </div>
+
+            {% elif session.role == 'student' %}
+            <div class="nav-section">
+                <span class="nav-section-title">Main</span>
+                <a href="/student/dashboard" class="nav-link {{ 'active' if request.path == '/student/dashboard' }}">
+                    <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Resume</span>
+                <a href="/resume/create" class="nav-link {{ 'active' if '/resume' in request.path }}">
+                    <i class="bi bi-file-person-fill"></i><span>Resume Builder</span>
+                </a>
+                <a href="/resume/portfolio" class="nav-link">
+                    <i class="bi bi-window-desktop"></i><span>My Portfolio</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Academic</span>
+                <a href="/student/notes" class="nav-link {{ 'active' if '/student/notes' in request.path }}">
+                    <i class="bi bi-journal-text"></i><span>Notes</span>
+                </a>
+                <a href="/student/papers" class="nav-link {{ 'active' if '/student/papers' in request.path }}">
+                    <i class="bi bi-file-earmark-text-fill"></i><span>Previous Papers</span>
+                </a>
+                <a href="/student/placements" class="nav-link {{ 'active' if '/student/placements' in request.path }}">
+                    <i class="bi bi-briefcase-fill"></i><span>Placements</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Tools</span>
+                <a href="/chatbot" class="nav-link"><i class="bi bi-robot"></i><span>AI Chatbot</span></a>
+                <a href="/ppt" class="nav-link"><i class="bi bi-easel2-fill"></i><span>PPT Generator</span></a>
+                <a href="/student/profile" class="nav-link"><i class="bi bi-person-circle"></i><span>Profile</span></a>
+            </div>
+            {% endif %}
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="/logout" class="nav-link logout-link">
+                <i class="bi bi-box-arrow-left"></i><span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ========== MAIN ========== -->
+    <main class="main-content" id="mainContent">
+
+        <!-- TOP NAVBAR -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" onclick="toggleSidebar()" id="menuToggle">
+                    <i class="bi bi-list"></i>
+                </button>
+                <h2 class="page-title">{% block page_title %}Dashboard{% endblock %}</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="Search..." id="globalSearch">
+                </div>
+                <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">
+                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                </button>
+                <div class="user-menu">
+                    <div class="user-info">
+                        <span class="user-name">{{ session.get('name', 'User') }}</span>
+                        <span class="user-role">{{ session.get('role', 'guest') | capitalize }}</span>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="bi bi-person-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- FLASH MESSAGES -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+            <div class="flash-msg flash-{{ category }}" onclick="this.remove()">
+                <i class="bi bi-{% if category == 'success' %}check-circle-fill{% elif category == 'danger' %}x-circle-fill{% elif category == 'warning' %}exclamation-triangle-fill{% else %}info-circle-fill{% endif %}"></i>
+                <span>{{ message }}</span>
+                <i class="bi bi-x close-flash"></i>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</div>
+
+<!-- Overlay for mobile sidebar -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Student Resumes{% endblock %}
+{% block page_title %}Student Resumes{% endblock %}
+{% block content %}
+{% if resumes %}
+<div class="gallery-grid">
+{% for r in resumes %}
+<div class="gallery-card"><div class="card-body" style="text-align:center;padding:24px">
+    <div style="width:56px;height:56px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;margin:0 auto 10px">{{ r.student.full_name[0] if r.student else '?' }}</div>
+    <h4 style="font-size:14px;font-weight:700">{{ r.student.full_name if r.student else 'Unknown' }}</h4>
+    <p style="font-size:11px;color:var(--text-muted);margin-bottom:12px">{{ r.student.roll_no if r.student else '' }}</p>
+    <a href="/resume/view/{{ r.user_id }}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i> View Portfolio</a>
+</div></div>
+{% endfor %}
+</div>
+{% else %}<div class="card"><div class="card-body"><div class="empty-state"><i class="bi bi-file-person"></i><h4>No Resumes Yet</h4></div></div></div>{% endif %}
+{% endblock %}

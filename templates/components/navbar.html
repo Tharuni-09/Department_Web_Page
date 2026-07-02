@@ -1,0 +1,60 @@
+<nav class="erp-navbar">
+
+    <!-- Left side: Mobile toggle + page title -->
+    <div class="nav-left">
+
+        <!-- Mobile hamburger -->
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <!-- Page title (dynamic optional) -->
+        <div class="page-title">
+            {% block page_title %}Dashboard{% endblock %}
+        </div>
+
+    </div>
+
+    <!-- Right side -->
+    <div class="nav-right">
+
+        <!-- Search (optional UI placeholder) -->
+        <div class="nav-item search-box">
+            <input type="text" placeholder="Search..." />
+            <i class="bi bi-search"></i>
+        </div>
+
+        <!-- Notifications -->
+        <div class="nav-item icon-btn">
+            <i class="bi bi-bell"></i>
+            <span class="dot"></span>
+        </div>
+
+        <!-- User Info -->
+        <div class="nav-item user-box">
+
+            <div class="user-info">
+                <span class="user-name">
+                    {{ session.get('username', 'User') }}
+                </span>
+                <small class="user-role">
+                    {{ session.get('role', 'guest')|capitalize }}
+                </small>
+            </div>
+
+            <div class="user-avatar">
+                <i class="bi bi-person-circle"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.classList.toggle("active");
+}
+</script>

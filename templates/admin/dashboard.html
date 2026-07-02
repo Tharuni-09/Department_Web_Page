@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon blue"><i class="bi bi-people-fill"></i></div><div class="stat-info"><div class="stat-number">{{ data.faculty }}</div><div class="stat-label">Faculty</div></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="bi bi-person-badge-fill"></i></div><div class="stat-info"><div class="stat-number">{{ data.students }}</div><div class="stat-label">Students</div></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="bi bi-journal-text"></i></div><div class="stat-info"><div class="stat-number">{{ data.notes }}</div><div class="stat-label">Notes</div></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="bi bi-file-earmark-text"></i></div><div class="stat-info"><div class="stat-number">{{ data.papers }}</div><div class="stat-label">Papers</div></div></div>
+    <div class="stat-card"><div class="stat-icon cyan"><i class="bi bi-briefcase-fill"></i></div><div class="stat-info"><div class="stat-number">{{ data.placements }}</div><div class="stat-label">Placements</div></div></div>
+    <div class="stat-card"><div class="stat-icon pink"><i class="bi bi-globe2"></i></div><div class="stat-info"><div class="stat-number">{{ data.outreach }}</div><div class="stat-label">Outreach</div></div></div>
+    <div class="stat-card"><div class="stat-icon blue"><i class="bi bi-file-person-fill"></i></div><div class="stat-info"><div class="stat-number">{{ data.resumes }}</div><div class="stat-label">Resumes</div></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="bi bi-clock-history"></i></div><div class="stat-info"><div class="stat-number">{{ data.pending_notes }}</div><div class="stat-label">Pending Notes</div></div></div>
+    <div class="stat-card"><div class="stat-icon red"><i class="bi bi-hourglass-split"></i></div><div class="stat-info"><div class="stat-number">{{ data.pending_papers }}</div><div class="stat-label">Pending Papers</div></div></div>
+</div>
+
+<div class="two-col-grid">
+    <div class="card">
+        <div class="card-header"><h4><i class="bi bi-lightning-fill" style="color:var(--accent-orange)"></i> Quick Actions</h4></div>
+        <div class="card-body">
+            <div class="btn-group" style="flex-wrap:wrap">
+                <a href="/admin/faculty/add" class="btn btn-primary btn-sm"><i class="bi bi-plus"></i> Add Faculty</a>
+                <a href="/admin/students/add" class="btn btn-success btn-sm"><i class="bi bi-plus"></i> Add Student</a>
+                <a href="/admin/outreach/add" class="btn btn-warning btn-sm"><i class="bi bi-plus"></i> Add Outreach</a>
+                <a href="/admin/placements/add" class="btn btn-outline btn-sm"><i class="bi bi-plus"></i> Add Placement</a>
+                <a href="/admin/notes?status=pending" class="btn btn-danger btn-sm"><i class="bi bi-check2-all"></i> Review Notes</a>
+                <a href="/admin/papers?status=pending" class="btn btn-danger btn-sm"><i class="bi bi-check2-all"></i> Review Papers</a>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header"><h4><i class="bi bi-activity" style="color:var(--accent-green)"></i> Recent Notes</h4></div>
+        <div class="card-body">
+            {% if recent_notes %}
+            {% for n in recent_notes %}
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color)">
+                <div><strong style="font-size:13px">{{ n.title }}</strong><br><small class="text-muted">{{ n.subject }} · Sem {{ n.semester }}</small></div>
+                <span class="badge {% if n.status=='approved' %}badge-success{% elif n.status=='pending' %}badge-warning{% else %}badge-danger{% endif %}">{{ n.status|capitalize }}</span>
+            </div>
+            {% endfor %}
+            {% else %}<p class="text-muted" style="font-size:13px">No recent notes</p>{% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header"><h4><i class="bi bi-bar-chart-fill" style="color:var(--primary)"></i> Overview</h4></div>
+    <div class="card-body"><canvas id="overviewChart" height="100"></canvas></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const ctx = document.getElementById('overviewChart');
+if(ctx){new Chart(ctx,{type:'bar',data:{labels:['Faculty','Students','Notes','Papers','Placements','Outreach'],datasets:[{label:'Count',data:[{{data.faculty}},{{data.students}},{{data.notes}},{{data.papers}},{{data.placements}},{{data.outreach}}],backgroundColor:['#0b3d91','#10b981','#8b5cf6','#f59e0b','#06b6d4','#ec4899'],borderRadius:8,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false}}}}})}
+</script>
+{% endblock %}

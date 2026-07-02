@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Placements{% endblock %}
+{% block page_title %}Placements Management{% endblock %}
+{% block content %}
+<div class="page-header"><h3>💼 Placement Drives</h3><a href="/admin/placements/add" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Placement</a></div>
+{% if placements %}
+<div class="gallery-grid">
+{% for p in placements %}
+<div class="gallery-card">
+    <div class="card-body">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+            <div><h4 style="font-size:16px;font-weight:700">{{ p.company }}</h4><p style="font-size:13px;color:var(--text-secondary)">{{ p.role }}</p></div>
+            <span class="badge {% if p.status=='active' %}badge-success{% else %}badge-danger{% endif %}">{{ p.status|capitalize }}</span>
+        </div>
+        <div style="display:flex;gap:16px;margin-bottom:12px;font-size:13px;color:var(--text-secondary)">
+            <span><i class="bi bi-currency-rupee"></i> {{ p.package }}</span>
+            {% if p.deadline %}<span><i class="bi bi-calendar3"></i> {{ p.deadline }}</span>{% endif %}
+        </div>
+        {% if p.eligibility %}<p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">{{ p.eligibility[:100] }}{% if p.eligibility|length > 100 %}...{% endif %}</p>{% endif %}
+        <div class="btn-group">
+            <a href="/admin/placements/edit/{{ p.id }}" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i> Edit</a>
+            <a href="javascript:void(0)" onclick="confirmDelete('/admin/placements/delete/{{ p.id }}','{{ p.company }}')" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Delete</a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+{% else %}<div class="card"><div class="card-body"><div class="empty-state"><i class="bi bi-briefcase"></i><h4>No Placements</h4><p>Add placement drives for students.</p></div></div></div>{% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if edit else 'Add' }} Placement{% endblock %}
+{% block page_title %}{{ 'Edit' if edit else 'Add' }} Placement Drive{% endblock %}
+{% block content %}
+<div class="form-card" style="max-width:700px">
+    <h3>{{ '✏️ Edit' if edit else '➕ Add' }} Placement</h3>
+    <form method="POST" action="{{ '/admin/placements/edit/' ~ edit.id if edit else '/admin/placements/add' }}">
+        <div class="form-row">
+            <div class="form-group"><label>Company Name *</label><input type="text" name="company" class="form-control" value="{{ edit.company if edit else '' }}" required></div>
+            <div class="form-group"><label>Role *</label><input type="text" name="role" class="form-control" value="{{ edit.role if edit else '' }}" required></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Package *</label><input type="text" name="package" class="form-control" value="{{ edit.package if edit else '' }}" placeholder="e.g. 6 LPA" required></div>
+            <div class="form-group"><label>Deadline</label><input type="date" name="deadline" class="form-control" value="{{ edit.deadline if edit else '' }}"></div>
+        </div>
+        <div class="form-group"><label>Eligibility</label><textarea name="eligibility" class="form-control" rows="3" placeholder="e.g. CGPA > 7.0, No backlogs">{{ edit.eligibility if edit else '' }}</textarea></div>
+        <div class="form-group"><label>Description</label><textarea name="description" class="form-control" rows="3">{{ edit.description if edit else '' }}</textarea></div>
+        <div class="form-row">
+            <div class="form-group"><label>Apply Link</label><input type="url" name="apply_link" class="form-control" value="{{ edit.apply_link if edit else '' }}" placeholder="https://..."></div>
+            <div class="form-group"><label>Batch Year</label><input type="text" name="batch_year" class="form-control" value="{{ edit.batch_year if edit else '' }}" placeholder="e.g. 2026"></div>
+        </div>
+        {% if edit %}<div class="form-group"><label>Status</label><select name="status" class="form-control"><option value="active" {{ 'selected' if edit.status=='active' }}>Active</option><option value="closed" {{ 'selected' if edit.status=='closed' }}>Closed</option><option value="upcoming" {{ 'selected' if edit.status=='upcoming' }}>Upcoming</option></select></div>{% endif %}
+        <div style="margin-top:24px;display:flex;gap:12px">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> {{ 'Update' if edit else 'Save' }}</button>
+            <a href="/admin/placements" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

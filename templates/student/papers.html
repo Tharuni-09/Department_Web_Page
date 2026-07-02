@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Papers{% endblock %}
+{% block page_title %}Previous Year Papers{% endblock %}
+{% block content %}
+<div class="card"><div class="card-body">
+{% if papers %}
+<div class="table-responsive"><table class="data-table"><thead><tr><th>Title</th><th>Subject</th><th>Sem</th><th>Regulation</th><th>Year</th><th>Download</th></tr></thead><tbody>
+{% for p in papers %}<tr><td><strong>{{ p.title }}</strong></td><td>{{ p.subject }}</td><td>{{ p.semester }}</td><td>{{ p.regulation or '—' }}</td><td>{{ p.academic_year or '—' }}</td><td><a href="/papers/download/{{ p.filename }}" class="btn btn-primary btn-sm"><i class="bi bi-download"></i></a></td></tr>{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-state"><i class="bi bi-file-earmark"></i><h4>No Papers Available</h4></div>{% endif %}
+</div></div>
+{% endblock %}

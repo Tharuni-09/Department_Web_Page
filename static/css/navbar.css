@@ -1,0 +1,277 @@
+/* =========================
+   TOP NAVBAR (ERP STYLE)
+========================= */
+
+.erp-navbar {
+    height: 60px;
+    background: #ffffff;
+    border-bottom: 1px solid #e6eaf0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+}
+
+/* =========================
+   LEFT SIDE
+========================= */
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #0b3d91;
+    display: none;
+}
+
+.page-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0b3d91;
+}
+
+/* =========================
+   RIGHT SIDE
+========================= */
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Search Box */
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    padding: 6px 28px 6px 10px;
+    border: 1px solid #d6deea;
+    border-radius: 20px;
+    outline: none;
+    font-size: 13px;
+    width: 180px;
+}
+
+.search-box i {
+    position: absolute;
+    right: 10px;
+    top: 6px;
+    font-size: 14px;
+    color: #888;
+}
+
+/* Notification */
+.icon-btn {
+    position: relative;
+    font-size: 18px;
+    color: #0b3d91;
+    cursor: pointer;
+}
+
+.icon-btn .dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    background: red;
+    border-radius: 50%;
+}
+
+/* User Box */
+.user-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.user-info {
+    text-align: right;
+}
+
+.user-name {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+.user-role {
+    font-size: 11px;
+    color: #777;
+}
+
+.user-avatar {
+    font-size: 28px;
+    color: #0b3d91;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .search-box {
+        display: none;
+    }
+
+    .page-title {
+        font-size: 14px;
+    }
+}/* =========================
+   TOP NAVBAR (ERP STYLE)
+========================= */
+
+.erp-navbar {
+    height: 60px;
+    background: #ffffff;
+    border-bottom: 1px solid #e6eaf0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+}
+
+/* =========================
+   LEFT SIDE
+========================= */
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #0b3d91;
+    display: none;
+}
+
+.page-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0b3d91;
+}
+
+/* =========================
+   RIGHT SIDE
+========================= */
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Search Box */
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    padding: 6px 28px 6px 10px;
+    border: 1px solid #d6deea;
+    border-radius: 20px;
+    outline: none;
+    font-size: 13px;
+    width: 180px;
+}
+
+.search-box i {
+    position: absolute;
+    right: 10px;
+    top: 6px;
+    font-size: 14px;
+    color: #888;
+}
+
+/* Notification */
+.icon-btn {
+    position: relative;
+    font-size: 18px;
+    color: #0b3d91;
+    cursor: pointer;
+}
+
+.icon-btn .dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    background: red;
+    border-radius: 50%;
+}
+
+/* User Box */
+.user-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.user-info {
+    text-align: right;
+}
+
+.user-name {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+.user-role {
+    font-size: 11px;
+    color: #777;
+}
+
+.user-avatar {
+    font-size: 28px;
+    color: #0b3d91;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .search-box {
+        display: none;
+    }
+
+    .page-title {
+        font-size: 14px;
+    }
+}

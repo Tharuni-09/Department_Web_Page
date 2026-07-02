@@ -1,0 +1,212 @@
+/* =========================
+   Loyola ERP Sidebar CSS
+   Professional Blue Theme
+========================= */
+
+/* Root layout fix */
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f4f7fa;
+}
+
+/* Wrapper */
+.erp-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #0b3d91, #1565c0);
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+}
+
+/* Scrollbar styling */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+/* =========================
+   BRAND HEADER
+========================= */
+
+.sidebar-header {
+    text-align: center;
+    padding: 20px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.brand-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.brand-sub {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 5px;
+}
+
+/* =========================
+   MENU
+========================= */
+
+.sidebar-menu {
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    position: relative;
+}
+
+/* Menu titles */
+.menu-title {
+    padding: 12px 20px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.7;
+}
+
+/* Links */
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+/* Hover effect */
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-left: 3px solid #38bdf8;
+    padding-left: 25px;
+}
+
+/* Active link (optional class from backend) */
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.18);
+    border-left: 3px solid #38bdf8;
+}
+
+/* Icons */
+.nav-link i {
+    font-size: 16px;
+    min-width: 20px;
+}
+
+/* =========================
+   DROPDOWN (OUTREACH)
+========================= */
+
+.dropdown .submenu {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    display: none;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.dropdown:hover .submenu {
+    display: block;
+}
+
+.submenu li a {
+    display: block;
+    padding: 10px 40px;
+    font-size: 13px;
+    color: #e3eaf5;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.submenu li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    padding-left: 45px;
+    color: #fff;
+}
+
+/* =========================
+   LOGOUT BUTTON
+========================= */
+
+.logout {
+    margin-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.logout .nav-link {
+    color: #ffb4b4;
+}
+
+.logout .nav-link:hover {
+    background: rgba(255, 0, 0, 0.15);
+    border-left: 3px solid #ff4d4d;
+}
+
+/* =========================
+   MAIN CONTENT SHIFT
+========================= */
+
+.main-wrapper {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    transition: all 0.3s ease;
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+    .sidebar {
+        left: -260px;
+        position: fixed;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .main-wrapper {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* =========================
+   HOVER ANIMATION GLOW
+========================= */
+
+.nav-link:hover i {
+    transform: scale(1.1);
+    transition: 0.2s ease;
+}

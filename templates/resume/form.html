@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if resume else 'Create' }} Resume{% endblock %}
+{% block page_title %}{{ '✏️ Edit' if resume else '📝 Create' }} Resume{% endblock %}
+{% block content %}
+<div class="form-card" style="max-width:800px">
+    <h3>{{ 'Update Your Resume' if resume else 'Build Your Resume' }}</h3>
+    <p class="text-muted mb-3" style="font-size:13px">Fill in all sections. Your resume will be displayed as a beautiful portfolio.</p>
+    <form method="POST" action="{{ '/resume/edit' if resume else '/resume/create' }}" enctype="multipart/form-data" id="resumeForm">
+        <!-- Photo -->
+        <div class="form-group"><label>📸 Profile Photo</label><div class="file-input-wrapper"><input type="file" name="photo" accept="image/*"><i class="bi bi-camera"></i><span>Upload your photo</span></div></div>
+
+        <!-- About -->
+        <div class="form-group"><label>About Me</label><textarea name="about" class="form-control" rows="3" placeholder="Brief introduction about yourself...">{{ resume.about if resume else '' }}</textarea></div>
+
+        <!-- Career Objective -->
+        <div class="form-group"><label>🎯 Career Objective</label><textarea name="career_objective" class="form-control" rows="3" placeholder="Your career goals...">{{ resume.career_objective if resume else '' }}</textarea></div>
+
+        <!-- Contact -->
+        <h4 style="margin:24px 0 12px;font-size:15px">📞 Contact Info</h4>
+        <div class="form-row">
+            <div class="form-group"><label>Email</label><input type="email" name="contact_email" class="form-control" value="{{ resume.contact_email if resume else user.email }}"></div>
+            <div class="form-group"><label>Phone</label><input type="text" name="contact_phone" class="form-control" value="{{ resume.contact_phone if resume else user.phone or '' }}"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>LinkedIn</label><input type="url" name="linkedin" class="form-control" value="{{ resume.linkedin if resume else '' }}" placeholder="https://linkedin.com/in/..."></div>
+            <div class="form-group"><label>GitHub</label><input type="url" name="github" class="form-control" value="{{ resume.github if resume else '' }}" placeholder="https://github.com/..."></div>
+        </div>
+        <div class="form-group"><label>Portfolio URL</label><input type="url" name="portfolio_url" class="form-control" value="{{ resume.portfolio_url if resume else '' }}"></div>
+
+        <!-- Education -->
+        <h4 style="margin:24px 0 12px;font-size:15px">🎓 Education</h4>
+        <div id="education-container">
+            {% if resume and resume.get_education() %}{% for e in resume.get_education() %}
+            <div class="array-item card mb-2" style="padding:12px"><div class="form-row"><div class="form-group"><label>Degree</label><input name="item_degree" class="form-control" value="{{ e.degree if e is mapping else e }}" onchange="updateJsonField('education')"></div><div class="form-group"><label>Institution</label><input name="item_institution" class="form-control" value="{{ e.institution if e is mapping else '' }}" onchange="updateJsonField('education')"></div></div><div class="form-row"><div class="form-group"><label>Year</label><input name="item_year" class="form-control" value="{{ e.year if e is mapping else '' }}" onchange="updateJsonField('education')"></div><div class="form-group"><label>Grade/CGPA</label><input name="item_grade" class="form-control" value="{{ e.grade if e is mapping else '' }}" onchange="updateJsonField('education')"></div></div><button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();updateJsonField('education')">Remove</button></div>
+            {% endfor %}{% endif %}
+        </div>
+        <input type="hidden" name="education" id="education-json" value='{{ resume.education if resume else "[]" }}'>
+        <button type="button" class="btn btn-outline btn-sm mb-3" onclick="addEdu()"><i class="bi bi-plus"></i> Add Education</button>
+
+        <!-- Skills -->
+        <h4 style="margin:24px 0 12px;font-size:15px">💡 Skills</h4>
+        <div id="skills-container">
+            {% if resume and resume.get_skills() %}{% for s in resume.get_skills() %}
+            <div class="array-item" style="display:inline-flex;gap:8px;margin:4px"><input name="item_name" class="form-control" style="width:180px" value="{{ s.name if s is mapping else s }}" onchange="updateJsonField('skills')"><button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();updateJsonField('skills')">×</button></div>
+            {% endfor %}{% endif %}
+        </div>
+        <input type="hidden" name="skills" id="skills-json" value='{{ resume.skills if resume else "[]" }}'>
+        <button type="button" class="btn btn-outline btn-sm mb-3" onclick="addSkill()"><i class="bi bi-plus"></i> Add Skill</button>
+
+        <!-- Projects -->
+        <h4 style="margin:24px 0 12px;font-size:15px">🚀 Projects</h4>
+        <div id="projects-container">
+            {% if resume and resume.get_projects() %}{% for p in resume.get_projects() %}
+            <div class="array-item card mb-2" style="padding:12px"><div class="form-group"><label>Project Name</label><input name="item_name" class="form-control" value="{{ p.name if p is mapping else p }}" onchange="updateJsonField('projects')"></div><div class="form-group"><label>Description</label><textarea name="item_description" class="form-control" rows="2" onchange="updateJsonField('projects')">{{ p.description if p is mapping else '' }}</textarea></div><button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();updateJsonField('projects')">Remove</button></div>
+            {% endfor %}{% endif %}
+        </div>
+        <input type="hidden" name="projects" id="projects-json" value='{{ resume.projects if resume else "[]" }}'>
+        <button type="button" class="btn btn-outline btn-sm mb-3" onclick="addProject()"><i class="bi bi-plus"></i> Add Project</button>
+
+        <!-- Certifications -->
+        <h4 style="margin:24px 0 12px;font-size:15px">📜 Certifications</h4>
+        <div id="certifications-container">
+            {% if resume and resume.get_certifications() %}{% for c in resume.get_certifications() %}
+            <div class="array-item" style="display:flex;gap:8px;margin:4px 0"><input name="item_name" class="form-control" value="{{ c.name if c is mapping else c }}" onchange="updateJsonField('certifications')"><button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();updateJsonField('certifications')">×</button></div>
+            {% endfor %}{% endif %}
+        </div>
+        <input type="hidden" name="certifications" id="certifications-json" value='{{ resume.certifications if resume else "[]" }}'>
+        <button type="button" class="btn btn-outline btn-sm mb-3" onclick="addCert()"><i class="bi bi-plus"></i> Add Certification</button>
+
+        <!-- Achievements -->
+        <h4 style="margin:24px 0 12px;font-size:15px">🏆 Achievements</h4>
+        <div id="achievements-container">
+            {% if resume and resume.get_achievements() %}{% for a in resume.get_achievements() %}
+            <div class="array-item" style="display:flex;gap:8px;margin:4px 0"><input name="item_name" class="form-control" value="{{ a.name if a is mapping else a }}" onchange="updateJsonField('achievements')"><button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();updateJsonField('achievements')">×</button></div>
+            {% endfor %}{% endif %}
+        </div>
+        <input type="hidden" name="achievements" id="achievements-json" value='{{ resume.achievements if resume else "[]" }}'>
+        <button type="button" class="btn btn-outline btn-sm mb-3" onclick="addAchievement()"><i class="bi bi-plus"></i> Add Achievement</button>
+
+        <!-- Internships -->
+        <h4 style="margin:24px 0 12px;font-size:15px">💼 Internships</h4>
+        <div id="internships-container">
+            {% if resume and resume.get_internships() %}{% for i in resume.get_internships() %}
+            <div class="array-item card mb-2" style="padding:12px"><div class="form-row"><div class="form-group"><label>Company</label><input name="item_company" class="form-control" value="{{ i.company if i is mapping else i }}" onchange="updateJsonField('internships')"></div><div class="form-group"><label>Role</label><input name="item_role" class="form-control" value="{{ i.role if i is mapping else '' }}" onchange="updateJsonField('internships')"></div></div><div class="form-group"><label>Duration</label><input name="item_duration" class="form-control" value="{{ i.duration if i is mapping else '' }}" onchange="updateJsonField('internships')"></div><button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();updateJsonField('internships')">Remove</button></div>
+            {% endfor %}{% endif %}
+        </div>
+        <input type="hidden" name="internships" id="internships-json" value='{{ resume.internships if resume else "[]" }}'>
+        <button type="button" class="btn btn-outline btn-sm mb-3" onclick="addInternship()"><i class="bi bi-plus"></i> Add Internship</button>
+
+        <div style="margin-top:32px;display:flex;gap:12px">
+            <button type="submit" class="btn btn-primary" onclick="updateAllJson()"><i class="bi bi-check-lg"></i> {{ 'Update' if resume else 'Create' }} Resume</button>
+            {% if resume %}<a href="/resume/portfolio" class="btn btn-outline"><i class="bi bi-eye"></i> View Portfolio</a>{% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function addEdu(){const c=document.getElementById('education-container');const d=document.createElement('div');d.className='array-item card mb-2';d.style.padding='12px';d.innerHTML='<div class="form-row"><div class="form-group"><label>Degree</label><input name="item_degree" class="form-control" onchange="updateJsonField(\'education\')"></div><div class="form-group"><label>Institution</label><input name="item_institution" class="form-control" onchange="updateJsonField(\'education\')"></div></div><div class="form-row"><div class="form-group"><label>Year</label><input name="item_year" class="form-control" onchange="updateJsonField(\'education\')"></div><div class="form-group"><label>Grade</label><input name="item_grade" class="form-control" onchange="updateJsonField(\'education\')"></div></div><button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();updateJsonField(\'education\')">Remove</button>';c.appendChild(d)}
+function addSkill(){const c=document.getElementById('skills-container');const d=document.createElement('div');d.className='array-item';d.style.cssText='display:inline-flex;gap:8px;margin:4px';d.innerHTML='<input name="item_name" class="form-control" style="width:180px" placeholder="e.g. Python" onchange="updateJsonField(\'skills\')"><button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();updateJsonField(\'skills\')">×</button>';c.appendChild(d)}
+function addProject(){const c=document.getElementById('projects-container');const d=document.createElement('div');d.className='array-item card mb-2';d.style.padding='12px';d.innerHTML='<div class="form-group"><label>Name</label><input name="item_name" class="form-control" onchange="updateJsonField(\'projects\')"></div><div class="form-group"><label>Description</label><textarea name="item_description" class="form-control" rows="2" onchange="updateJsonField(\'projects\')"></textarea></div><button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();updateJsonField(\'projects\')">Remove</button>';c.appendChild(d)}
+function addCert(){const c=document.getElementById('certifications-container');const d=document.createElement('div');d.className='array-item';d.style.cssText='display:flex;gap:8px;margin:4px 0';d.innerHTML='<input name="item_name" class="form-control" placeholder="Certification name" onchange="updateJsonField(\'certifications\')"><button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();updateJsonField(\'certifications\')">×</button>';c.appendChild(d)}
+function addAchievement(){const c=document.getElementById('achievements-container');const d=document.createElement('div');d.className='array-item';d.style.cssText='display:flex;gap:8px;margin:4px 0';d.innerHTML='<input name="item_name" class="form-control" placeholder="Achievement" onchange="updateJsonField(\'achievements\')"><button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();updateJsonField(\'achievements\')">×</button>';c.appendChild(d)}
+function addInternship(){const c=document.getElementById('internships-container');const d=document.createElement('div');d.className='array-item card mb-2';d.style.padding='12px';d.innerHTML='<div class="form-row"><div class="form-group"><label>Company</label><input name="item_company" class="form-control" onchange="updateJsonField(\'internships\')"></div><div class="form-group"><label>Role</label><input name="item_role" class="form-control" onchange="updateJsonField(\'internships\')"></div></div><div class="form-group"><label>Duration</label><input name="item_duration" class="form-control" onchange="updateJsonField(\'internships\')"></div><button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();updateJsonField(\'internships\')">Remove</button>';c.appendChild(d)}
+function updateAllJson(){['education','skills','projects','certifications','achievements','internships'].forEach(f=>updateJsonField(f))}
+</script>
+{% endblock %}
